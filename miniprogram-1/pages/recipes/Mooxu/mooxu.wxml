@@ -1,0 +1,7 @@
+<view class="container recipe">
+    <view class="top"></view>
+    <view class="title"></view>
+    <view class="ingredient"></view>
+    <view class="workflow"></view>
+    <view class="bottom"></view>
+</view>
