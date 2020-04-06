@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"sort"
 )
 
 //_geo_country_region ..
@@ -16,9 +17,9 @@ type _geo_country_core struct {
 	ID          string `json:"id"`
 	Iso2Code    string `json:"iso2Code"`
 	Name        string `json:"name"`
-	CapitalCity string `json:"capitalCity"`
-	Longitude   string `json:"longitude"`
-	Latitude    string `json:"latitude"`
+	capitalCity string `json:"capitalCity"`
+	longitude   string `json:"longitude"`
+	latitude    string `json:"latitude"`
 }
 
 type _geo_country struct {
@@ -29,17 +30,45 @@ type _geo_country struct {
 	LendingType _geo_country_region `json:"lendingType"`
 }
 
+type _c_map struct {
+	Letter string               `json:"letter"`
+	Data   []*_geo_country_core `json:"data"`
+}
+
 func main() {
 	countries := getCountryList()
 	fmt.Println(*countries[0])
 	cntCores := []_geo_country_core{}
+	m := make(map[string][]*_geo_country_core)
 	for _, v := range countries {
 		cntCores = append(cntCores, v._geo_country_core)
+		hc := []rune(v._geo_country_core.Name)[0]
+		//if _, ok := m[string(hc)]; ok {
+		m[string(hc)] = append(m[string(hc)], &v._geo_country_core)
+		//}
 	}
-	b, _ := json.Marshal(cntCores)
 
+	/* b, _ := json.Marshal(cntCores)
 	d1 := []byte(string(b))
-	ioutil.WriteFile("country.out.json", d1, 0644)
+	ioutil.WriteFile("country.out.json", d1, 0644) */
+
+	var keys []string
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	var cmapList []*_c_map
+	for _, k := range keys {
+		list := m[k]
+		cmap := &_c_map{Letter: k, Data: list}
+		cmapList = append(cmapList, cmap)
+	}
+
+	b1, _ := json.Marshal(cmapList)
+	d2 := []byte(string(b1))
+	ioutil.WriteFile("pageformat.country.json", d2, 0644)
+
 }
 
 func getCountryList() []*_geo_country {

@@ -1,23 +1,26 @@
-<!--index.wxml-->
-<view class="container">
-  <view class="page">
-    <!-- <view class="page__hd">
-        <view class="page__title">SearchBar</view>
-        <view class="page__desc">搜索栏</view>
-    </view> -->
-    <view class="page__bd">
-        <mp-searchbar bindselectresult="selectResult" search="{{search}}"></mp-searchbar>
-    </view>
+<view class='city_box' >
+      <view class='city_left'>
+          <scroll-view scroll-y style='width:100%;height:100%;' scroll-with-animation scroll-into-view='{{cityListId}}'>
+              <view class='city_locate' data-types='locate' catchtap='cityTap'>
+                  <text class='city_locate_title'>自动定位</text>
+                  <text class='city_locate_text' style='{{!locateCity&&"color:#33b9ff;"}}'>{{locateCity||'点击定位'}}</text>
+              </view>
+              <view class='national' data-types='national' catchtap='cityTap'>Countries</view>
+              <view class='new_city'>
+                  <view class='new_city_title'>Hot Zones</view>
+                  <view class='new_city_box'>
+                      <text class='new_city_text' wx:for='{{newcity}}' wx:key='this' data-types='new' catchtap='cityTap' data-val='{{item}}'>{{item}}</text>
+                  </view>
+              </view>
+              <view class='city_list_box'>
+                <block wx:for='{{citylist}}' wx:key='this' wx:for-item='letterItem' wx:for-index='letterIndex'>
+                  <view class='city_first_letter' id='{{letterItem.letter}}'>{{letterItem.letter}}</view>
+                  <text class='city_name' wx:for='{{letterItem.data}}' wx:key='this' data-types='list' catchtap='cityTap' data-index='{{index}}' data-val='{{item}}'>{{item.name}}</text>
+                </block>
+              </view>
+          </scroll-view>
+      </view>
+      <view class='city_right'>
+          <text class='letter_item' wx:for='{{letter}}' wx:key='this' catchtap='letterTap' data-item='{{item}}'>{{item}}</text>
+      </view>
   </view>
-  <mp-indexList class="city__list" list="{{list}}" bindchoose="onChoose">
-    <view class="page">
-        <view class="page__hd">
-            <view class="page__title">Index List</view>
-            <view class="page__desc">类通讯录列表</view>
-        </view>
-        <view class="page__bd">
-        </view>
-    </view>
-</mp-indexList>
-
-</view>
